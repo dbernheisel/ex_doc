@@ -26,8 +26,16 @@
     <script>
       <%# Immediately apply night mode preference to avoid a flash effect %>
       try {
-        if (localStorage.getItem('night-mode') === 'true') {
-          document.body.classList.add('night-mode');
-        }
+        var settings = localStorage.getItem('ex_doc:settings');
+        settings = JSON.parse(settings || '{}');
+        var isDark;
+
+        if (localStorage.getItem('night-mode') === 'true') { isDark = true }
+        if (settings.nightMode === true) { isDark = true }
+        if (settings.theme) { isDark = false }
+        if (settings.theme === 'dark') { isDark = true }
+        if (settings.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches) { isDark = true }
+        if (settings.theme === null && window.matchMedia('(prefers-color-scheme: dark)').matches) { isDark = true }
+        if (isDark) { document.body.classList.add('dark') }
       } catch (error) { }
     </script>
